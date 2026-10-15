@@ -1,6 +1,7 @@
 # Secrets: never upload these
 .env
-
+.env.*
+!.env.example
 # Python
 venv/
 __pycache__/
