@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Applications{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">Applications</h1>
+    <a href="{{ url_for('add_application') }}" class="btn btn-primary">+ Add Application</a>
+</div>
+
+<!-- Search by company name or job title -->
+<form method="get" action="{{ url_for('list_applications') }}" class="row g-2 mb-3">
+    <div class="col-12 col-sm-8 col-md-6">
+        <input type="text" name="search" value="{{ search }}" class="form-control"
+               placeholder="Search by company or job title">
+    </div>
+    <div class="col-auto">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+        {% if search %}
+            <a href="{{ url_for('list_applications') }}" class="btn btn-outline-secondary">Clear</a>
+        {% endif %}
+    </div>
+</form>
+
+{% if search %}
+    <p class="text-muted small">
+        {{ applications|length }} result(s) for "{{ search }}"
+    </p>
+{% endif %}
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Company</th>
+                    <th>Job title</th>
+                    <th>Location</th>
+                    <th>Applied on</th>
+                    <th style="min-width: 150px;">Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for a in applications %}
+                <tr>
+                    <td class="fw-semibold">{{ a.company_name }}</td>
+                    <td>
+                        {{ a.job_title }}
+                        {% if a.notes %}
+                            <div class="text-muted small">{{ a.notes|truncate(80) }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if a.location %}{{ a.location }}{% else %}<span class="text-muted">-</span>{% endif %}
+                    </td>
+                    <td class="text-nowrap">{{ a.application_date.strftime('%d %b %Y') }}</td>
+
+                    <!-- Changing the dropdown submits the form and saves the new status -->
+                    <td>
+                        <form method="post" action="{{ url_for('update_status', application_id=a.application_id) }}">
+                            <input type="hidden" name="search" value="{{ search }}">
+                            <select name="status" class="form-select form-select-sm status-select status-{{ a.status|lower }}"
+                                    onchange="this.form.submit()" aria-label="Change status">
+                                {% for s in statuses %}
+                                    <option value="{{ s }}" {% if a.status == s %}selected{% endif %}>{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                            <noscript><button type="submit" class="btn btn-sm btn-outline-secondary mt-1">Save</button></noscript>
+                        </form>
+                    </td>
+
+                    <td class="text-end text-nowrap">
+                        {% if a.job_link %}
+                            <a href="{{ a.job_link }}" target="_blank" rel="noopener noreferrer"
+                               class="btn btn-sm btn-outline-secondary">Job link</a>
+                        {% endif %}
+                        <a href="{{ url_for('edit_application', application_id=a.application_id) }}"
+                           class="btn btn-sm btn-outline-primary">Edit</a>
+                        <form method="post" action="{{ url_for('delete_application', application_id=a.application_id) }}"
+                              class="d-inline"
+                              onsubmit="return confirm('Delete this application? This cannot be undone.');">
+                            <input type="hidden" name="search" value="{{ search }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        {% if search %}
+                            No applications match "{{ search }}".
+                        {% else %}
+                            No applications yet. <a href="{{ url_for('add_application') }}">Add your first one.</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+/* Light grey page background so white cards stand out */
+body {
+    background-color: #f4f6fa;
+}
+
+/* Softer, rounded cards without a default border */
+.card {
+    border: 0;
+    border-radius: 0.75rem;
+}
+
+/* Keep the coloured left stripe on dashboard cards visible */
+.card.border-start {
+    border-left-width: 4px !important;
+}
+
+.navbar-brand {
+    letter-spacing: 0.5px;
+}
+
+/* The status dropdown in the table takes the colour of its status */
+.status-select {
+    font-weight: 600;
+    border-width: 2px;
+}
+
+.status-applied   { border-color: #0d6efd; color: #0a58ca; }
+.status-interview { border-color: #ffc107; color: #997404; }
+.status-offer     { border-color: #198754; color: #146c43; }
+.status-rejected  { border-color: #dc3545; color: #b02a37; }

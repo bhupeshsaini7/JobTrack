@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Add Application' if mode == 'add' else 'Edit Application' }}{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">{{ 'Add Application' if mode == 'add' else 'Edit Application' }}</h1>
+
+<!-- Validation errors from app.py -->
+{% if errors %}
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<div class="card shadow-sm" style="max-width: 700px;">
+    <div class="card-body">
+        <form method="post">
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label for="company_name" class="form-label">Company name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="company_name" name="company_name"
+                           maxlength="100" required value="{{ form.company_name or '' }}">
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="job_title" class="form-label">Job title <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="job_title" name="job_title"
+                           maxlength="100" required value="{{ form.job_title or '' }}">
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location"
+                           maxlength="100" placeholder="e.g. Jaipur or Remote" value="{{ form.location or '' }}">
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="application_date" class="form-label">Application date <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" id="application_date" name="application_date"
+                           max="{{ max_date }}" required value="{{ form.application_date or '' }}">
+                </div>
+
+                <div class="col-12">
+                    <label for="job_link" class="form-label">Job link</label>
+                    <input type="url" class="form-control" id="job_link" name="job_link"
+                           maxlength="500" placeholder="https://..." value="{{ form.job_link or '' }}">
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        {% for s in statuses %}
+                            <option value="{{ s }}" {% if form.status == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label for="notes" class="form-label">Notes</label>
+                    <textarea class="form-control" id="notes" name="notes" rows="4"
+                              maxlength="2000">{{ form.notes or '' }}</textarea>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    {{ 'Add Application' if mode == 'add' else 'Save Changes' }}
+                </button>
+                <a href="{{ url_for('list_applications') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+        <h1 class="h3 mb-0">Dashboard</h1>
+        <p class="text-muted mb-0">{{ today.strftime('%A, %d %B %Y') }}</p>
+    </div>
+    <a href="{{ url_for('add_application') }}" class="btn btn-primary">+ Add Application</a>
+</div>
+
+<!-- Counts: total on top, then one card per status -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-start border-dark border-4">
+            <div class="card-body">
+                <div class="text-muted small">Total Applications</div>
+                <div class="display-5 fw-bold">{{ total }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm h-100 border-start border-primary border-4">
+            <div class="card-body">
+                <div class="text-muted small">Applied</div>
+                <div class="display-6 fw-bold">{{ applied }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm h-100 border-start border-warning border-4">
+            <div class="card-body">
+                <div class="text-muted small">Interview</div>
+                <div class="display-6 fw-bold">{{ interview }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm h-100 border-start border-success border-4">
+            <div class="card-body">
+                <div class="text-muted small">Offer</div>
+                <div class="display-6 fw-bold">{{ offer }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm h-100 border-start border-danger border-4">
+            <div class="card-body">
+                <div class="text-muted small">Rejected</div>
+                <div class="display-6 fw-bold">{{ rejected }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The 5 most recent applications -->
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">Recent applications</h2>
+            <a href="{{ url_for('list_applications') }}" class="small">View all</a>
+        </div>
+
+        {% if recent %}
+            <ul class="list-group list-group-flush">
+                {% for a in recent %}
+                    <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2 px-0">
+                        <div>
+                            <div class="fw-semibold">{{ a.company_name }}</div>
+                            <div class="text-muted small">
+                                {{ a.job_title }} · {{ a.application_date.strftime('%d %b %Y') }}
+                            </div>
+                        </div>
+                        {% if a.status == 'Applied' %}
+                            <span class="badge text-bg-primary">Applied</span>
+                        {% elif a.status == 'Interview' %}
+                            <span class="badge text-bg-warning">Interview</span>
+                        {% elif a.status == 'Offer' %}
+                            <span class="badge text-bg-success">Offer</span>
+                        {% else %}
+                            <span class="badge text-bg-danger">Rejected</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted mb-0">
+                You have no applications yet.
+                <a href="{{ url_for('add_application') }}">Add your first one.</a>
+            </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
