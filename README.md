@@ -2,6 +2,18 @@
 
 A simple web app for tracking job applications, built with Python, Flask and MySQL.
 
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Applications
+![Applications](screenshots/applications.png)
+
+### Add Application
+![Add Application](screenshots/add-application.png)
+
+
 ## Features
 
 - Add a job application (company, title, location, job link, date, status, notes)
